@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %} Book list page {% endblock %}
+{% block content %}
+
+<h3>Books</h3>
+
+    <div class="row mb-3">
+        <div class="col-4">
+            <form method="get" class="d-flex">
+                <input name="q" type="text" value="{{q}}" class="form-control me-2" placeholder="search">
+                <button class="btn btn-success">Search</button>
+            </form>
+        </div>
+    </div>
+
+{% if page_obj %}
+    <ul>
+        {% for book in page_obj.object_list %}
+            <div class="row mb-4">
+                <div class="col-2">
+                    <img class="cover-pic" src="{{book.cover_picture.url}}" alt="cover pic">
+                </div>
+                <div class="col-6 ms-4">
+                    <a href="{% url 'books:detail' book.id %}">{{ book.title }}</a>
+
+                    <p>
+                        {{book.description|slice:":300"}}...
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+
+
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">&laquo;first</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{page_obj.previous_page_number}}">previous</a></li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <a href="#" class="page-link">{{ page_obj.number }}</a>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{page_obj.next_page_number}}">next</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{page_obj.paginator.num_pages}}">last&raquo;</a></li>
+                {% endif %}
+            </ul>
+    </ul>
+
+{% else %}
+    No found book.
+{% endif %}
+
+{% endblock %}
